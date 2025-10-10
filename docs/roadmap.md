@@ -1,16 +1,22 @@
+# docs/roadmap.md
+
 # Roadmap
 
-## ✅ Phase 1: OCR Pipeline
-- [x] Screen capture
-- [x] OCR extraction
-- [ ] Bounding box overlays
+## ✅ Completed
 
-## 🔜 Phase 2: Voiceover
-- [ ] Local TTS integration
-- [ ] Voice cloning (privacy-first)
-- [ ] Real-time narration
+- Active window capture  
+- Region isolation via `params.py`  
+- Visual calibration overlay  
+- OCR test script with logging  
 
-## 🧪 Phase 3: UX Enhancements
-- [ ] GUI overlay
-- [ ] Configurable hotkeys
-- [ ] Language model hinting
+## 🔜 In Progress
+
+- Voice synthesis module  
+- Region presets per game  
+- Dynamic scaling based on resolution  
+
+## 🧠 Future Ideas
+
+- Hotkey triggers  
+- Subtitle overlay  
+- Background loop with auto-detection  
