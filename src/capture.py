@@ -25,3 +25,14 @@ def capture_screen(region=None):
     """
     screenshot = pyautogui.screenshot(region=region)
     return screenshot
+
+def capture_window():
+    """
+    Captures a screenshot of the currently active window.
+    Returns:
+        PIL.Image: Screenshot image or None if no window is active
+    """
+    region = get_active_window_region()
+    if region is None:
+        return None
+    return capture_screen(region)
