@@ -80,7 +80,7 @@ Voice Synthesis:
 - Start-Sleep -Seconds 5; py -3.10 tests/voice_test.py
 
 ## 📁 Project Structure
-
+```
 Game-Text-To-VoiceOver-AI/
 ├── src/
 │   ├── capture.py         → Active window capture
@@ -104,7 +104,7 @@ Game-Text-To-VoiceOver-AI/
 │   └── changelog.md
 ├── .gitignore
 └── README.md
-
+```
 ## 📚 Documentation
 
 - Architecture → docs/architecture.md
