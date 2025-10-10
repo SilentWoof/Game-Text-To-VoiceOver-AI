@@ -11,7 +11,7 @@ A modular pipeline to automatically extract in-game text and narrate it using vo
 
 ## 📦 Requirements
 
-See `requirements.txt` for dependencies.
+See [`requirements.txt`](requirements.txt) for dependencies.
 
 ## 🚀 Getting Started
 
@@ -27,14 +27,12 @@ See `requirements.txt` for dependencies.
 
 ## 📁 Repo Structure
 
-See `docs/architecture.md` for module breakdown.
+See [`docs/architecture.md`](docs/architecture.md) for module breakdown.
 
 ## 🛡️ Privacy
 
-No cloud calls. No telemetry. See `docs/privacy.md`.
+No cloud calls. No telemetry. See [`docs/privacy.md`](docs/privacy.md).
 
 ## 🗺️ Roadmap
 
-- Real-time narration
-- Bounding box overlays
-- Voice cloning with local inference
+Planned features and milestones are tracked in [`docs/roadmap.md`](docs/roadmap.md).
