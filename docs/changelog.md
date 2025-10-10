@@ -1,14 +1,23 @@
-### 📄 `docs/changelog.md`
+# docs/changelog.md
 
-```markdown
 # Changelog
 
-## [0.1.0] - Initial Commit
-- Added `ocr_test.py`
-- Installed Python 3.10 and Tesseract OCR
-- Created repo structure and documentation
+## v0.1 — Initial Commit
 
-## [0.2.0] - Planned
-- Modularize into `src/`
-- Add bounding box overlays
-- Begin voiceover integration
+- Active window capture  
+- Basic OCR extraction  
+
+## v0.2 — Region Isolation
+
+- `params.py` for resolution and crop box  
+- Modular cropping logic  
+
+## v0.3 — Visual Calibration
+
+- Red-box overlay script  
+- Calibration preview saved to `tests/output/`  
+
+## v0.4 — OCR Test Script
+
+- Full pipeline test with logging  
+- PowerShell delay for manual switching  
