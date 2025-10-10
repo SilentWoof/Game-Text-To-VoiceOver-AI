@@ -1,9 +1,20 @@
 # src/voice.py
 
 import os
+import re
 import pyttsx3
 from src.utils import log_event
 from src.config import SETTINGS  # unified config import
+
+def normalize_text(text: str) -> str:
+    """
+    Cleans up OCR output for smoother narration.
+    - Removes line breaks and extra spaces
+    - Adds spacing after punctuation for natural pauses
+    """
+    text = text.replace('\n', ' ').replace('  ', ' ')
+    text = re.sub(r'([.!?])', r'\1 ', text)
+    return text.strip()
 
 def narrate_text(text: str, save_to_file: bool = False, filename: str = "output.wav"):
     """
@@ -18,8 +29,10 @@ def narrate_text(text: str, save_to_file: bool = False, filename: str = "output.
     """
     log_event("Starting voice narration")
 
-    # Normalize line breaks to avoid unnatural pauses
-    text = text.replace('\n', ' ').strip()
+    # Normalize and reflow text for smoother delivery
+    text = normalize_text(text)
+    sentences = re.split(r'(?<=[.!?]) +', text)
+    reflowed_text = ' '.join(sentence.strip() for sentence in sentences)
 
     engine = pyttsx3.init()
     voice_settings = SETTINGS["voice"]
@@ -35,11 +48,11 @@ def narrate_text(text: str, save_to_file: bool = False, filename: str = "output.
 
     if should_save:
         output_path = os.path.join("assets", "VOs", filename)
-        engine.save_to_file(text, output_path)
+        engine.save_to_file(reflowed_text, output_path)
         engine.runAndWait()  # Required to flush and write the file
         log_event(f"Voice saved to {output_path}")
     else:
-        engine.say(text)
+        engine.say(reflowed_text)
         engine.runAndWait()
 
     log_event("Voice narration complete")

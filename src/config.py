@@ -22,11 +22,11 @@ ocr_regions = {
 SETTINGS = {
     "voice": {
         "save_voice_to_file": False,
-        "rate": 180,
+        "rate": 155,
         "volume": 1.0,
-        "voice_id": None
+        "voice_id": "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0"
     },
     "transcription": {
-        "save_transcription_to_file": False
+        "save_transcription_to_file": True
     }
 }
