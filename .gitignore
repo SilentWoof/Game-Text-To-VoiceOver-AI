@@ -15,15 +15,10 @@ __pycache__/
 *.log
 *.tmp
 
-# Sample assets
-assets/samples/*.png
-
-#Captured voice overs
-assets/VOs/
+# Output Files
+assets/
 
 # OS-specific
 .DS_Store
 Thumbs.db
 
-# Ignore all calibration images
-tests/output/
