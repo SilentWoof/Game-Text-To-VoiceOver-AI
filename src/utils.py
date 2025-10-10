@@ -14,7 +14,7 @@ def log_event(message):
 
 def preprocess_image(image):
     """
-    Applies optional preprocessing to improve OCR accuracy.
+    Applies preprocessing to improve OCR accuracy.
     Args:
         image (PIL.Image): The image to preprocess
     Returns:
@@ -23,11 +23,11 @@ def preprocess_image(image):
     # Convert to grayscale
     gray = ImageOps.grayscale(image)
 
-    # Optional: apply contrast enhancement
+    # Apply contrast enhancement
     enhancer = ImageEnhance.Contrast(gray)
     enhanced = enhancer.enhance(1.5)
 
-    # Optional: apply thresholding
+    # Apply binary thresholding
     thresholded = enhanced.point(lambda p: 255 if p > 180 else 0)
 
     return thresholded
