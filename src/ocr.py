@@ -2,7 +2,7 @@
 
 import pytesseract
 from src.utils import preprocess_image, log_event
-from src.params import ocr_region
+from src.capture_config import ocr_region
 
 def extract_text(image):
     """
