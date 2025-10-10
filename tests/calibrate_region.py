@@ -4,7 +4,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.capture import capture_screen, get_active_window_region
-from src.params import ocr_region
+from src.capture_config import ocr_region
 from src.utils import log_event
 
 from PIL import ImageDraw
