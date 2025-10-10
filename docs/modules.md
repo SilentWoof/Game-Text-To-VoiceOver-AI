@@ -1,16 +1,20 @@
+# docs/modules.md
+
 # Module Breakdown
 
-## `capture.py`
-- Captures screen using `pyautogui`
-- Returns image buffer for OCR
+## src/
 
-## `ocr.py`
-- Converts image to text using `pytesseract`
-- Includes preprocessing hooks (e.g. grayscale, thresholding)
+- `capture.py`: Captures active window or full screen  
+- `ocr.py`: Crops image using `params.py`, runs OCR  
+- `params.py`: Stores resolution and region coordinates  
+- `utils.py`: Logging and preprocessing utilities  
 
-## `voiceover.py` *(planned)*
-- Converts extracted text to voice
-- Will support local TTS and voice cloning
+## tests/
 
-## `utils.py`
-- Shared helpers: logging, bounding boxes, config parsing
+- `calibrate_region.py`: Draws red box over OCR region  
+- `ocr_test.py`: Runs full OCR pipeline and prints text  
+- `output/`: Stores calibration preview images  
+
+## docs/
+
+- Architecture, setup, privacy, roadmap, changelog  
