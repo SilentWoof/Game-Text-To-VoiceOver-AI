@@ -3,12 +3,12 @@
 import os
 import pyttsx3
 from src.utils import log_event
-from src.voice_config import VOICE_SETTINGS
+from src.config import SETTINGS  # unified config import
 
 def narrate_text(text: str, save_to_file: bool = False, filename: str = "output.wav"):
     """
     Narrates the given text using pyttsx3 TTS engine.
-    Applies settings from voice_config.py.
+    Applies settings from config.py.
     Optionally saves narration to a .wav file in assets/VOs/.
 
     Args:
@@ -22,14 +22,16 @@ def narrate_text(text: str, save_to_file: bool = False, filename: str = "output.
     text = text.replace('\n', ' ').strip()
 
     engine = pyttsx3.init()
-    engine.setProperty("rate", VOICE_SETTINGS["rate"])
-    engine.setProperty("volume", VOICE_SETTINGS["volume"])
+    voice_settings = SETTINGS["voice"]
 
-    if VOICE_SETTINGS["voice_id"]:
-        engine.setProperty("voice", VOICE_SETTINGS["voice_id"])
+    engine.setProperty("rate", voice_settings["rate"])
+    engine.setProperty("volume", voice_settings["volume"])
+
+    if voice_settings["voice_id"]:
+        engine.setProperty("voice", voice_settings["voice_id"])
 
     # Respect config override
-    should_save = save_to_file and VOICE_SETTINGS.get("save_voice_to_file", True)
+    should_save = save_to_file and voice_settings.get("save_voice_to_file", True)
 
     if should_save:
         output_path = os.path.join("assets", "VOs", filename)
