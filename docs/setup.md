@@ -1,11 +1,23 @@
-# Setup Instructions
+# docs/setup.md
 
-## 1. Install Python 3.10+
-Download from [python.org](https://www.python.org/downloads/release/python-31011/)
+# Setup Guide
 
-## 2. Install Tesseract OCR
-Use [UB Mannheim builds](https://github.com/UB-Mannheim/tesseract/wiki)
+## 🧰 Requirements
 
-## 3. Install Python Dependencies
-```bash
-py -3.10 -m pip install -r requirements.txt
+- Python 3.10+  
+- Tesseract OCR installed and in PATH  
+- Pillow, pytesseract, pywin32  
+
+## 📦 Installation
+
+1. Clone the repo  
+2. Run `pip install -r requirements.txt`  
+3. Edit `params.py` to match your resolution and region  
+
+## 🧪 Testing
+
+Visual Calibration:  
+Start-Sleep -Seconds 5; py -3.10 tests/calibrate_region.py
+
+OCR Extraction:  
+Start-Sleep -Seconds 5; py -3.10 tests/ocr_test.py
