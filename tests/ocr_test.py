@@ -1,20 +1,20 @@
-import pyautogui
-import pytesseract
-import cv2
-import numpy as np
+# tests/ocr_test.py
 
-# Optional: Set path to tesseract.exe if not on PATH
-# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Step 1: Capture screenshot
-screenshot = pyautogui.screenshot()
+from src.capture import capture_screen, get_active_window_region
+from src.ocr import extract_text
+from src.utils import log_event
 
-# Step 2: Convert to OpenCV format
-image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+if __name__ == "__main__":
+    log_event("Starting OCR test")
 
-# Step 3: Run OCR
-text = pytesseract.image_to_string(image)
+    region = get_active_window_region()
+    log_event(f"Active window region: {region}")
 
-# Step 4: Print result
-print("🧠 OCR Result:")
-print(text)
+    image = capture_screen(region=region)
+    text = extract_text(image)
+
+    log_event("OCR result:")
+    print("🧠 OCR Result:\n", text)
