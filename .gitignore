@@ -21,3 +21,6 @@ assets/samples/*.png
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Ignore all calibration images
+tests/output/
