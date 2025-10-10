@@ -2,27 +2,30 @@
 
 import pytesseract
 from src.utils import preprocess_image, log_event
-from src.capture_config import ocr_region
+from src.config import ocr_regions  # unified config import
 
-def extract_text(image):
+def extract_text(image, region_name="Main"):
     """
-    Extracts text from a defined region of the image using OCR.
+    Extracts text from a named region of the image using OCR.
     Args:
         image (PIL.Image): The full captured image
+        region_name (str): The key name of the region to extract ("Main", "Title", etc.)
     Returns:
         str: Extracted text from the cropped region
     """
-    # Load region coordinates from params
-    x1 = ocr_region["upper_left"]["x"]
-    y1 = ocr_region["upper_left"]["y"]
-    x2 = ocr_region["lower_right"]["x"]
-    y2 = ocr_region["lower_right"]["y"]
+    if region_name not in ocr_regions:
+        log_event(f"Region '{region_name}' not found in config.")
+        return ""
 
-    # Crop image to defined region
+    region = ocr_regions[region_name]
+    x1 = region["upper_left"]["x"]
+    y1 = region["upper_left"]["y"]
+    x2 = region["lower_right"]["x"]
+    y2 = region["lower_right"]["y"]
+
     cropped = image.crop((x1, y1, x2, y2))
-    log_event(f"Cropped image to region: ({x1}, {y1}) → ({x2}, {y2})")
+    log_event(f"Cropped image to '{region_name}' region: ({x1}, {y1}) → ({x2}, {y2})")
 
-    # Preprocess and run OCR
     preprocessed = preprocess_image(cropped)
     text = pytesseract.image_to_string(preprocessed)
     return text
