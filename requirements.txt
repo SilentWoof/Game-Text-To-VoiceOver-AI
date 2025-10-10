@@ -1,6 +1,7 @@
-pyautogui         # For screen capture
-pytesseract       # Python wrapper for Tesseract OCR
-opencv-python     # For image processing and format conversion
-Pillow            # Required by pyautogui and pytesseract
-numpy             # Used with OpenCV for image array manipulation
-pygetwindow       # Detect and target the active window for focused screen capture
+pyautogui           # For screen capture
+pytesseract         # Python wrapper for Tesseract OCR
+opencv-python       # For image processing and format conversion
+Pillow              # Required by pyautogui and pytesseract
+numpy               # Used with OpenCV for image array manipulation
+pygetwindow         # Detect and target the active window for focused screen capture
+pyttsx3             # Local TTS engine for voice synthesis
