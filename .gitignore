@@ -1,0 +1,23 @@
+# Python cache and compiled files
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# IDE settings
+.idea/
+
+# Environment files
+.env
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Sample assets
+assets/samples/*.png
+
+# OS-specific
+.DS_Store
+Thumbs.db
