@@ -1,5 +1,3 @@
-# README.md
-
 # Game Text-to-VoiceOver AI
 
 Modular pipeline for capturing, extracting, and narrating in-game note text—designed for immersive accessibility and blind playthroughs.
