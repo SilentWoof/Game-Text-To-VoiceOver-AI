@@ -2,28 +2,27 @@
 
 ## src/
 
-- `capture.py`: Captures active window or full screen; includes `capture_window()` for region isolation  
-- `ocr.py`: Crops image using `capture_config.py`, preprocesses, and runs OCR  
-- `voice.py`: Narrates extracted text aloud; optionally saves `.wav` file based on config  
-- `voice_config.py`: Stores voice rate, volume, voice ID, and save toggle (`save_voice_to_file`)  
-- `capture_config.py`: Stores resolution and OCR region coordinates for cropping  
+- `capture.py`: Captures active window or full screen; includes `capture_window()` and `get_active_window_region()` for region isolation  
+- `ocr.py`: Crops image using config-defined zones, preprocesses, and runs OCR via Tesseract  
+- `voice.py`: Narrates extracted text aloud using pyttsx3; optionally saves `.wav` file based on config  
+- `config.py`: Unified configuration for resolution, OCR regions, voice settings, and transcription toggles  
 - `utils.py`: Logging (`log_event`) and image preprocessing (`preprocess_image`) utilities  
 
 ## root/
 
-- `game_narrate.py`: Orchestrates full pipeline—capture → OCR → voice → save  
-- `requirements.txt`: Lists dependencies (e.g. `pyttsx3`, `pytesseract`, `Pillow`, `pyautogui`)  
+- `game_narrate.py`: Orchestrates full pipeline—capture → OCR → voice → save; supports `-calibrate` flag for visual zone overlay  
+- `requirements.txt`: Lists dependencies (e.g. `pyttsx3`, `pytesseract`, `Pillow`, `pyautogui`, `pygetwindow`)  
 
 ## tests/
 
-- `calibrate_region.py`: Draws red box over OCR region for visual alignment  
-- `voice_test.py`: Narrates sample text with optional `.wav` output for voice validation  
-- `ocr_test.py`: Runs full OCR pipeline and prints extracted text  
-- `output/`: Stores calibration preview images and test artifacts  
+- `ocr_test.py`: Runs OCR pipeline on active window and prints extracted text from `"Main"` region  
+- `voice_test.py`: Narrates sample text aloud; file saving disabled by default  
 
 ## assets/
 
 - `VOs/`: Stores timestamped voice narration files (`.wav`)  
+- `scripts/`: Stores daily transcription logs (`YYMMDD.txt`)  
+- `calibration/`: Stores OCR zone overlay previews (`zone_calibration.png`)  
 
 ## docs/
 

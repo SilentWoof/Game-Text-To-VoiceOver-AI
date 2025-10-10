@@ -39,3 +39,13 @@
 - Added voice_test.py for standalone narration validation  
 - Updated calibrate_region.py for resolution-aware red-box overlay  
 - Modular test harnesses for OCR and voice synthesis  
+
+## v0.8 — Unified Config and CLI Calibration
+
+- Replaced params.py and voice_config.py with unified config.py  
+- Integrated calibration overlay into game_narrate.py via `-calibrate` flag  
+- Removed calibrate_region.py and consolidated logic  
+- Explicit region targeting in ocr_test.py  
+- Disabled file saving in voice_test.py by default  
+- Added top-level docstrings to all test scripts  
+- Cleaned up redundant imports and clarified logging output  
