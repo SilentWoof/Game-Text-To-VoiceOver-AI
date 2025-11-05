@@ -7,8 +7,10 @@
 - **No telemetry or tracking**: The system does not collect, transmit, or log user data beyond local console output  
 - **Voice synthesis is offline**: Narration is powered by `pyttsx3`, a local TTS engine with no network calls  
 - **Unified configuration**: All settings (resolution, OCR regions, voice, transcription) are stored in `config.py`  
+- **Modular GUI integration**: GUI logic is fully separated into `src/gui.py` for layout, calibration, region editing, and status updates  
 - **CLI calibration**: OCR zone overlays are triggered via `-calibrate` flag in `game_narrate.py`  
-- **Modular auditability**: Each module (capture, OCR, voice) is isolated and testable, enabling forensic-grade rollback and inspection  
+- **Hotkey support**: Narration can be triggered via `Ctrl + Alt + N` using `keyboard` listener  
+- **Modular auditability**: Each module (capture, OCR, voice, GUI) is isolated and testable, enabling forensic-grade rollback and inspection  
 - **No background capture**: Only the active window is targeted, and OCR is restricted to defined regions  
 - **Line-break normalization**: Narration flow is driven by punctuation, not OCR formatting  
 - **Optional voice saving**: `.wav` file generation is controlled via `SETTINGS["voice"]["save_voice_to_file"]`  
@@ -20,6 +22,7 @@
 ## 🛠️ Planned Enhancements
 
 - **Naturalized speech flow**: Add sentence smoothing, pause tuning, and optional SSML support for expressive delivery  
-- **Voice preview utility**: Add CLI tool to test voice settings before narration  
+- **Voice preview utility**: Add GUI or CLI tool to test voice settings before narration  
 - **Config export/import**: Save and load config profiles for different games or setups  
-- **Hotkey triggers**: Enable background loop or manual capture via keyboard shortcut  
+- **GUI enhancements**: Add playback controls, voice preview button, and real-time OCR feedback  
+- **Background loop mode**: Enable passive monitoring and auto-capture based on triggers or intervals  

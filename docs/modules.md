@@ -7,11 +7,12 @@
 - `voice.py`: Narrates extracted text aloud using pyttsx3; optionally saves `.wav` file based on config  
 - `config.py`: Unified configuration for resolution, OCR regions, voice settings, and transcription toggles  
 - `utils.py`: Logging (`log_event`) and image preprocessing (`preprocess_image`) utilities  
+- `gui.py`: Manages GUI layout, settings toggles, calibration overlay, region editor, hotkey listener, and status updates  
 
 ## root/
 
-- `game_narrate.py`: Orchestrates full pipeline—capture → OCR → voice → save; supports `-calibrate` flag for visual zone overlay  
-- `requirements.txt`: Lists dependencies (e.g. `pyttsx3`, `pytesseract`, `Pillow`, `pyautogui`, `pygetwindow`)  
+- `game_narrate.py`: Orchestrates full pipeline—capture → OCR → GUI → voice → save; imports GUI functions from `src/gui.py`; supports `-calibrate` flag for visual zone overlay  
+- `requirements.txt`: Lists dependencies (e.g. `pyttsx3`, `pytesseract`, `Pillow`, `pyautogui`, `pygetwindow`, `keyboard`, `tkinter`)  
 
 ## tests/
 
@@ -31,4 +32,4 @@
 - `privacy.md`: Local-only processing and voice file handling  
 - `roadmap.md`: Planned features and future enhancements  
 - `changelog.md`: Version history and module-level changes  
-- `modules.md`: This file—module breakdown and structure overview  
+- `modules.md`: This file—module breakdown and structure overview

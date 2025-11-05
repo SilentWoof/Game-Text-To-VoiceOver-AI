@@ -12,11 +12,13 @@ This project enables blind or visually impaired players to experience narrative-
 - 📐 Region Isolation: Crops only the narrative zones, excluding UI clutter
 - 🧠 OCR Extraction: Uses Tesseract to extract clean, readable text from game notes
 - 🗣️ Voice Synthesis: Narrates extracted text using pyttsx3 with configurable rate, volume, and voice
-- 🗂️ Modular Design: Each step—capture, OCR, voice—is independently testable and traceable
+- 🖥️ GUI Interface: Toggle settings, trigger narration, and view captured text in real time
+- 🗂️ Modular Design: Each step—capture, OCR, voice, GUI—is independently testable and traceable
 - 🔒 Privacy-First: All processing is local; no cloud APIs or external data sharing
 - ⚙️ Unified Configuration: All settings (resolution, regions, voice, transcription) live in `src/config.py`
 - 🧪 Test Harnesses: Lightweight scripts for OCR and voice validation
 - 🧾 Daily Logging: Optional transcription logging to timestamped `.txt` files
+- 🎧 Hotkey Support: Trigger narration anytime with `Ctrl + Alt + N`
 
 ## 📦 Installation
 
@@ -29,6 +31,8 @@ Requirements:
   - pyautogui
   - pygetwindow
   - pytesseract
+  - keyboard
+  - tkinter (usually included with Python)
 
 Optional (Windows only):
 - PowerShell for timed test execution
@@ -64,20 +68,30 @@ You can adjust coordinates, voice settings, and logging behavior without touchin
 ## 🚀 Usage
 
 Run narration pipeline:
-- python game_narrate.py
+- `python game_narrate.py`
 
 Run calibration overlay:
-- python game_narrate.py -calibrate
+- `python game_narrate.py -calibrate`
 
 This will draw red and blue boxes over the `"Main"` and `"Title"` OCR zones and save a screenshot to `assets/calibration/zone_calibration.png`.
 
 ## 🧪 Testing
 
 OCR Extraction:
-- Start-Sleep -Seconds 5; py -3.10 tests/ocr_test.py
+- `Start-Sleep -Seconds 5; py -3.10 tests/ocr_test.py`
 
 Voice Synthesis:
-- Start-Sleep -Seconds 5; py -3.10 tests/voice_test.py
+- `Start-Sleep -Seconds 5; py -3.10 tests/voice_test.py`
+
+## 🖥️ GUI Overview
+
+- Launches a window with:
+  - Narration and logging toggles
+  - Calibration and region editor tools
+  - Live display of captured text
+- Narration can be triggered via:
+  - GUI buttons
+  - Global hotkey: `Ctrl + Alt + N`
 
 ## 📁 Project Structure
 ```
@@ -88,6 +102,7 @@ Game-Text-To-VoiceOver-AI/
 │   ├── voice.py           → Voice synthesis
 │   ├── utils.py           → Logging + preprocessing
 │   ├── config.py          → Unified settings and regions
+│   └── gui.py             → GUI layout, calibration, editor, hotkey, and status updates
 ├── tests/
 │   ├── ocr_test.py        → OCR pipeline test
 │   └── voice_test.py      → Voice synthesis test
@@ -105,21 +120,22 @@ Game-Text-To-VoiceOver-AI/
 ├── .gitignore
 └── README.md
 ```
+
 ## 📚 Documentation
 
-- Architecture → docs/architecture.md
-- Modules → docs/modules.md
-- Setup Guide → docs/setup.md
-- Privacy Principles → docs/privacy.md
-- Roadmap → docs/roadmap.md
-- Changelog → docs/changelog.md
+- Architecture → `docs/architecture.md`
+- Modules → `docs/modules.md`
+- Setup Guide → `docs/setup.md`
+- Privacy Principles → `docs/privacy.md`
+- Roadmap → `docs/roadmap.md`
+- Changelog → `docs/changelog.md`
 
 ## 🛡️ Privacy & Philosophy
 
 This project is built for forensic-grade accessibility:
-- No cloud APIs
-- No telemetry
-- No hidden dependencies
+- No cloud APIs  
+- No telemetry  
+- No hidden dependencies  
 - Every step is modular, inspectable, and overrideable
 
 Perfect for blind playthroughs, immersive narration, and traceable pipelines.
