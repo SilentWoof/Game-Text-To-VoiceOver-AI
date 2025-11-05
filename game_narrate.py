@@ -1,21 +1,14 @@
+# game_narrate.py
+
 import os
 import sys
 import datetime
-import threading
-import tkinter as tk
-from tkinter import font
-from PIL import ImageDraw
-import keyboard
-
-from src.capture import capture_window, capture_screen, get_active_window_region
+from src.capture import capture_window
 from src.ocr import extract_text
 from src.voice import narrate_text
 from src.utils import log_event
-from src.config import SETTINGS, ocr_regions
-
-# Global references for GUI elements
-status_label = None
-text_display = None
+from src.config import CONFIG
+from src.gui import launch_gui, update_status
 
 def log_text_to_file(title_text, body_text):
     date_str = datetime.datetime.now().strftime("%y%m%d")
@@ -33,41 +26,6 @@ def log_text_to_file(title_text, body_text):
     with open(file_path, "a", encoding="utf-8") as f:
         f.write(entry)
 
-def calibrate_regions():
-    log_event("Starting OCR zone calibration")
-
-    region = get_active_window_region()
-    image = capture_screen(region=region)
-    draw = ImageDraw.Draw(image)
-
-    for region_name, coords in ocr_regions.items():
-        x1 = coords["upper_left"]["x"]
-        y1 = coords["upper_left"]["y"]
-        x2 = coords["lower_right"]["x"]
-        y2 = coords["lower_right"]["y"]
-
-        color = "red" if region_name == "Main" else "blue"
-        draw.rectangle([(x1, y1), (x2, y2)], outline=color, width=3)
-        log_event(f"Drew {region_name} region: ({x1}, {y1}) → ({x2}, {y2}) in {color}")
-
-    output_dir = os.path.join("assets", "calibration")
-    os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, "zone_calibration.png")
-
-    image.show()
-    image.save(output_path)
-    log_event(f"Calibration image saved as {output_path}")
-
-def update_status(message, captured_text=""):
-    if status_label:
-        status_label.config(text=message)
-    if text_display:
-        text_display.config(state="normal")
-        text_display.delete("1.0", tk.END)
-        if captured_text.strip():
-            text_display.insert(tk.END, captured_text.strip())
-        text_display.config(state="disabled")
-
 def run_narration():
     log_event("Starting game narration pipeline")
 
@@ -80,7 +38,7 @@ def run_narration():
     title_text = extract_text(image, region_name="Title")
     main_text = extract_text(image, region_name="Main")
 
-    if SETTINGS["transcription"]["save_transcription_to_file"]:
+    if CONFIG.settings["transcription"]["save_transcription_to_file"]:
         log_text_to_file(title_text, main_text)
 
     if not main_text.strip():
@@ -88,53 +46,34 @@ def run_narration():
         update_status("No text found in Main region.", "")
         return
 
-    if SETTINGS["voice"]["enable_narration"]:
-        narrate_text(main_text)
+    combined_text = f"{title_text.strip()}\n\n{main_text.strip()}"
+    update_status("Text captured.", combined_text)
 
-        if SETTINGS["voice"]["save_voice_to_file"]:
-            timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-            filename = f"{timestamp}.wav"
-            narrate_text(main_text, save_to_file=True, filename=filename)
-            log_event(f"Narration saved as {filename}")
+    filename = None
+    if CONFIG.settings["voice"]["save_voice_to_file"]:
+        timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+        title_clean = "".join(c for c in title_text.strip() if c.isalnum() or c in (" ", "_")).strip().replace(" ", "_")
+        if not title_clean:
+            title_clean = "Untitled"
+        output_dir = os.path.join("assets", "VOs")
+        os.makedirs(output_dir, exist_ok=True)
+        filename = os.path.join(output_dir, f"{timestamp}_{title_clean}.wav")
+
+    if CONFIG.settings["voice"]["enable_narration"] or CONFIG.settings["voice"]["save_voice_to_file"]:
+        log_event(f"Calling narrate_text with save_to_file={CONFIG.settings['voice']['save_voice_to_file']} and filename={filename}")
+        narrate_text(
+            main_text,
+            save_to_file=CONFIG.settings["voice"]["save_voice_to_file"],
+            filename=filename if filename else "output.wav"
+        )
     else:
-        log_event("Narration disabled by config.")
+        log_event("Narration and voice saving both disabled by config.")
 
-    update_status("Narration complete.", main_text)
-
-def start_hotkey_listener():
-    keyboard.add_hotkey("ctrl+alt+n", run_narration)
-    keyboard.wait()
-
-def launch_gui():
-    global status_label, text_display
-
-    root = tk.Tk()
-    root.title("Game Narrate")
-    root.geometry("400x450")
-    root.resizable(False, False)
-
-    title_font = font.Font(family="Segoe UI", size=12, weight="bold")
-    italic_font = font.Font(family="Segoe UI", size=10, slant="italic")
-
-    tk.Label(root, text="Game Narrate", font=title_font).pack(pady=(10, 5))
-    tk.Label(root, text="Hotkey Enabled: Ctrl + Alt + N", font=("Segoe UI", 10)).pack()
-
-    quit_button = tk.Button(root, text="Quit", command=root.quit, width=10)
-    quit_button.pack(pady=10)
-
-    tk.Label(root, text="Last Text Captured:", font=("Segoe UI", 10)).pack()
-
-    text_display = tk.Text(root, height=15, wrap="word", font=italic_font, state="disabled", bg="#f4f4f4", relief="sunken")
-    text_display.pack(padx=10, pady=(0, 10), fill="both", expand=True)
-
-    status_label = tk.Label(root, text="Waiting for input...", font=("Segoe UI", 9), fg="gray")
-    status_label.pack(pady=(0, 5))
-
-    threading.Thread(target=start_hotkey_listener, daemon=True).start()
-    root.mainloop()
+    update_status("Narration complete.", combined_text)
 
 if __name__ == "__main__":
     if "-calibrate" in sys.argv:
+        from src.gui import calibrate_regions
         calibrate_regions()
     else:
-        launch_gui()
+        launch_gui(run_narration)

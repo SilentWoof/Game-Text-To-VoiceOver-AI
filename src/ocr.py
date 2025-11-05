@@ -2,7 +2,7 @@
 
 import pytesseract
 from src.utils import preprocess_image, log_event
-from src.config import ocr_regions  # unified config import
+from src.config import CONFIG
 
 def extract_text(image, region_name="Main"):
     """
@@ -13,11 +13,11 @@ def extract_text(image, region_name="Main"):
     Returns:
         str: Extracted text from the cropped region
     """
-    if region_name not in ocr_regions:
+    if region_name not in CONFIG.ocr_regions:
         log_event(f"Region '{region_name}' not found in config.")
         return ""
 
-    region = ocr_regions[region_name]
+    region = CONFIG.ocr_regions[region_name]
     x1 = region["upper_left"]["x"]
     y1 = region["upper_left"]["y"]
     x2 = region["lower_right"]["x"]

@@ -3,7 +3,7 @@
 import pyautogui
 from PIL import Image
 import pygetwindow as gw
-from src.config import resolution  # optional import for future use
+from src.config import CONFIG
 
 def get_active_window_region():
     """
