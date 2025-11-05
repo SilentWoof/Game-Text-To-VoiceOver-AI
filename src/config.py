@@ -21,6 +21,7 @@ ocr_regions = {
 # Global settings
 SETTINGS = {
     "voice": {
+        "enable_narration": False,
         "save_voice_to_file": False,
         "rate": 155,
         "volume": 1.0,

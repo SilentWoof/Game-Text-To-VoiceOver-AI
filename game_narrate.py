@@ -88,13 +88,16 @@ def run_narration():
         update_status("No text found in Main region.", "")
         return
 
-    narrate_text(main_text)
+    if SETTINGS["voice"]["enable_narration"]:
+        narrate_text(main_text)
 
-    if SETTINGS["voice"]["save_voice_to_file"]:
-        timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-        filename = f"{timestamp}.wav"
-        narrate_text(main_text, save_to_file=True, filename=filename)
-        log_event(f"Narration saved as {filename}")
+        if SETTINGS["voice"]["save_voice_to_file"]:
+            timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+            filename = f"{timestamp}.wav"
+            narrate_text(main_text, save_to_file=True, filename=filename)
+            log_event(f"Narration saved as {filename}")
+    else:
+        log_event("Narration disabled by config.")
 
     update_status("Narration complete.", main_text)
 
