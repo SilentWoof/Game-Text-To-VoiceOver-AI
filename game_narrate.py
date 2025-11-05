@@ -1,17 +1,11 @@
-# game_narrate.py
-
-"""
-Main entry point for game narration and OCR zone calibration.
-
-Usage:
-    python game_narrate.py           → Runs narration pipeline
-    python game_narrate.py -calibrate → Captures active window and overlays OCR zones
-"""
-
-import datetime
 import os
 import sys
+import datetime
+import threading
+import tkinter as tk
 from PIL import ImageDraw
+
+import keyboard
 
 from src.capture import capture_window, capture_screen, get_active_window_region
 from src.ocr import extract_text
@@ -19,12 +13,10 @@ from src.voice import narrate_text
 from src.utils import log_event
 from src.config import SETTINGS, ocr_regions
 
+# Global reference to the status label
+status_label = None
+
 def log_text_to_file(title_text, body_text):
-    """
-    Appends the captured title and body text to a daily log file.
-    Format: assets/scripts/YYMMDD.txt
-    Each entry is separated by a divider.
-    """
     date_str = datetime.datetime.now().strftime("%y%m%d")
     log_path = os.path.join("assets", "scripts")
     os.makedirs(log_path, exist_ok=True)
@@ -41,10 +33,6 @@ def log_text_to_file(title_text, body_text):
         f.write(entry)
 
 def calibrate_regions():
-    """
-    Captures the active window and overlays OCR zones for visual calibration.
-    Saves the result to assets/calibration/zone_calibration.png
-    """
     log_event("Starting OCR zone calibration")
 
     region = get_active_window_region()
@@ -69,16 +57,17 @@ def calibrate_regions():
     image.save(output_path)
     log_event(f"Calibration image saved as {output_path}")
 
-def main():
-    if "-calibrate" in sys.argv:
-        calibrate_regions()
-        return
+def update_status(message):
+    if status_label:
+        status_label.config(text=message)
 
+def run_narration():
     log_event("Starting game narration pipeline")
 
     image = capture_window()
     if image is None:
         log_event("No active window detected. Skipping OCR.")
+        update_status("No active window detected.")
         return
 
     title_text = extract_text(image, region_name="Title")
@@ -89,6 +78,7 @@ def main():
 
     if not main_text.strip():
         log_event("No text extracted from 'Main' region. Skipping narration.")
+        update_status("No text found in Main region.")
         return
 
     narrate_text(main_text)
@@ -99,5 +89,33 @@ def main():
         narrate_text(main_text, save_to_file=True, filename=filename)
         log_event(f"Narration saved as {filename}")
 
+    update_status("Narration complete.")
+
+def start_hotkey_listener():
+    keyboard.add_hotkey("ctrl+alt+n", run_narration)
+    keyboard.wait()
+
+def launch_gui():
+    global status_label
+
+    root = tk.Tk()
+    root.title("Game Narrate")
+    root.geometry("320x140")
+    root.resizable(False, False)
+
+    tk.Label(root, text="Hotkey Enabled: Ctrl + Alt + N", font=("Segoe UI", 11)).pack(pady=10)
+
+    status_label = tk.Label(root, text="Waiting for input...", font=("Segoe UI", 10), fg="gray")
+    status_label.pack(pady=5)
+
+    quit_button = tk.Button(root, text="Quit", command=root.quit, width=10)
+    quit_button.pack(pady=10)
+
+    threading.Thread(target=start_hotkey_listener, daemon=True).start()
+    root.mainloop()
+
 if __name__ == "__main__":
-    main()
+    if "-calibrate" in sys.argv:
+        calibrate_regions()
+    else:
+        launch_gui()
