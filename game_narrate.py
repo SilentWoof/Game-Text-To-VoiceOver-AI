@@ -3,8 +3,8 @@ import sys
 import datetime
 import threading
 import tkinter as tk
+from tkinter import font
 from PIL import ImageDraw
-
 import keyboard
 
 from src.capture import capture_window, capture_screen, get_active_window_region
@@ -13,8 +13,9 @@ from src.voice import narrate_text
 from src.utils import log_event
 from src.config import SETTINGS, ocr_regions
 
-# Global reference to the status label
+# Global references for GUI elements
 status_label = None
+text_display = None
 
 def log_text_to_file(title_text, body_text):
     date_str = datetime.datetime.now().strftime("%y%m%d")
@@ -57,9 +58,15 @@ def calibrate_regions():
     image.save(output_path)
     log_event(f"Calibration image saved as {output_path}")
 
-def update_status(message):
+def update_status(message, captured_text=""):
     if status_label:
         status_label.config(text=message)
+    if text_display:
+        text_display.config(state="normal")
+        text_display.delete("1.0", tk.END)
+        if captured_text.strip():
+            text_display.insert(tk.END, captured_text.strip())
+        text_display.config(state="disabled")
 
 def run_narration():
     log_event("Starting game narration pipeline")
@@ -67,7 +74,7 @@ def run_narration():
     image = capture_window()
     if image is None:
         log_event("No active window detected. Skipping OCR.")
-        update_status("No active window detected.")
+        update_status("No active window detected.", "")
         return
 
     title_text = extract_text(image, region_name="Title")
@@ -78,7 +85,7 @@ def run_narration():
 
     if not main_text.strip():
         log_event("No text extracted from 'Main' region. Skipping narration.")
-        update_status("No text found in Main region.")
+        update_status("No text found in Main region.", "")
         return
 
     narrate_text(main_text)
@@ -89,27 +96,36 @@ def run_narration():
         narrate_text(main_text, save_to_file=True, filename=filename)
         log_event(f"Narration saved as {filename}")
 
-    update_status("Narration complete.")
+    update_status("Narration complete.", main_text)
 
 def start_hotkey_listener():
     keyboard.add_hotkey("ctrl+alt+n", run_narration)
     keyboard.wait()
 
 def launch_gui():
-    global status_label
+    global status_label, text_display
 
     root = tk.Tk()
     root.title("Game Narrate")
-    root.geometry("320x140")
+    root.geometry("400x450")
     root.resizable(False, False)
 
-    tk.Label(root, text="Hotkey Enabled: Ctrl + Alt + N", font=("Segoe UI", 11)).pack(pady=10)
+    title_font = font.Font(family="Segoe UI", size=12, weight="bold")
+    italic_font = font.Font(family="Segoe UI", size=10, slant="italic")
 
-    status_label = tk.Label(root, text="Waiting for input...", font=("Segoe UI", 10), fg="gray")
-    status_label.pack(pady=5)
+    tk.Label(root, text="Game Narrate", font=title_font).pack(pady=(10, 5))
+    tk.Label(root, text="Hotkey Enabled: Ctrl + Alt + N", font=("Segoe UI", 10)).pack()
 
     quit_button = tk.Button(root, text="Quit", command=root.quit, width=10)
     quit_button.pack(pady=10)
+
+    tk.Label(root, text="Last Text Captured:", font=("Segoe UI", 10)).pack()
+
+    text_display = tk.Text(root, height=15, wrap="word", font=italic_font, state="disabled", bg="#f4f4f4", relief="sunken")
+    text_display.pack(padx=10, pady=(0, 10), fill="both", expand=True)
+
+    status_label = tk.Label(root, text="Waiting for input...", font=("Segoe UI", 9), fg="gray")
+    status_label.pack(pady=(0, 5))
 
     threading.Thread(target=start_hotkey_listener, daemon=True).start()
     root.mainloop()
